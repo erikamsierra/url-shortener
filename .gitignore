@@ -1,0 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# PyCharm/IDEA project-related metadata
+.idea/
+
+# OS specific stuff
+.DS_Store
+
+# Local db
+*.sqlite3

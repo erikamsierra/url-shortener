@@ -1,0 +1,62 @@
+us:
+  build: .
+  command: ./us-ctl runserver 0.0.0.0:8000
+  environment:
+    ENV: "dev"
+    COUNTRY: "UK"
+    DATABASE_URL: "postgres://ususer:uspass@db:5432/usdb"
+    DOMAIN: "http://192.168.99.100:8000"
+    BROKER_URL: "amqp://guest:guest@rabbitmq:5672//"
+    REDIS_HOST: 'redis'
+    TRACK_VISITS: "true"
+  ports:
+    - "8000:8000"
+  volumes:
+    - .:/srv
+  links:
+    - db
+    - rabbitmq
+    - redis
+
+worker:
+  build: .
+  command: celery worker --app=url_shortener.celery:app --loglevel=INFO --events --concurrency=4
+  environment:
+    C_FORCE_ROOT: "true"
+    DATABASE_URL: "postgres://ususer:uspass@db:5432/usdb"
+    DOMAIN: "http://192.168.99.100:8000"
+    BROKER_URL: "amqp://guest:guest@rabbitmq:5672//"
+    REDIS_HOST: 'redis'
+    TRACK_VISITS: "true"
+  volumes:
+   - .:/srv
+  links:
+   - db
+   - rabbitmq
+   - redis
+
+data:
+  image: sameersbn/postgresql:9.6-2
+  command: "/bin/true"
+  volumes:
+    - "/var/lib/postgresql"
+
+db:
+  image: sameersbn/postgresql:9.6-2
+  environment:
+    DEBUG: 'false'
+    DB_USER: 'ususer'
+    DB_PASS: 'uspass'
+    DB_NAME: 'usdb'
+  volumes_from:
+    - data
+
+rabbitmq:
+  image: "rabbitmq:management"
+  hostname: "rabbitmq"
+  ports:
+  - '5672:5672'
+  - '15672:15672'
+
+redis:
+  image: redis

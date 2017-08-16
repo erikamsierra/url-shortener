@@ -1,0 +1,8 @@
+Django==1.11.3
+psycopg2==2.7.1
+requests==2.13.0
+gunicorn==19.7.1
+djangorestframework==3.6.3
+celery==4.1.0
+django-redis==4.8.0
+pytest-django==3.1.2

@@ -2,13 +2,17 @@ URL Shortener is a Django App that stores and returns shortened versions of URLs
 URL when requested, tracking the number of visits if desired.
 
 It can be launched with Docker and these are the steps to get it up and running:
+````
 $ docker-compose build
 $ docker-compose run us us-ctl migrate
 $ docker-compose run us us-ctl createsuperuser
 $ docker-compose up
+````
 
 To run the tests:
+````
 $ docker-compose run us us-ctl test
+````
 
 The application consists in three parts:
 - <your_domain>/admin: standard django admin site.
